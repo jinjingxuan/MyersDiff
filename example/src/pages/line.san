@@ -1,0 +1,100 @@
+<template>
+    <div class="line-diff">
+        <div class="old">
+            <div s-for="line, index in oldJson" class="line {{line.option}}">
+                <span class="index">{{index + 1}}</span>
+                <span class="symbol">{{getSymbol(line.option)}}</span>
+                <span class="value">{{line.value}}</span>
+            </div>
+        </div>
+        <div class="new">
+            <div s-for="line, index in newJson" class="line {{line.option}}">
+                <span class="index">{{index + 1}}</span>
+                <span class="symbol">{{getSymbol(line.option)}}</span>
+                <span class="value">{{line.value}}</span>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+import {lineDiff} from 'diff';
+
+export default {
+    computed: {
+        diffArr() {
+            const oldData = this.data.get('oldData');
+            const newData = this.data.get('newData');
+            return lineDiff.diff(oldData, newData);
+        },
+        oldJson() {
+            const diffArr = this.data.get('diffArr');
+            const oldArr = diffArr.filter(item => item.option !== 'add');
+            return oldArr;
+        },
+        newJson() {
+            const diffArr = this.data.get('diffArr');
+            const newArr = diffArr.filter(item => item.option !== 'remove');
+            return newArr;
+        },
+    },
+    getSymbol(operator) {
+        switch (operator) {
+            case 'add':
+                return '+';
+            case 'remove':
+                return '-';
+            case 'equal':
+                return ' ';
+        }
+    }
+    
+};
+</script>
+
+<style lang="less">
+.line-diff {
+    width: 100%;
+    display: flex;
+    background-color: #fff;
+    height: 600px;
+    overflow-y: scroll;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    .old {
+        flex: 50%;
+        height: inherit;
+    }
+    .new {
+        flex: 50%;
+        height: inherit;
+    }
+    .title {
+        text-align: center;
+    }
+    .line {
+        height: 22px;
+        .index {
+            display: inline-block;
+            width: 44px;
+            font-size: 14px;
+            text-align: right;
+            color: rgba(27,31,35,.3);
+            line-height: 22px;
+        }
+        .symbol {
+            display: inline-block;
+            width: 10px;
+        }
+        .value {
+            white-space: pre;
+        }
+    }
+    .remove {
+        background-color: #FBE9EB;
+    }
+    .add {
+        background-color: #ECFDF0;
+    }
+}
+</style>

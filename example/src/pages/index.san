@@ -1,0 +1,107 @@
+<template>
+    <div class="app-wrap">
+        <div class="header">
+            <span>diff类型：</span>
+            <s-group
+                name="radiogroup"
+                value="{{diffType}}"
+                on-change="handleChange"
+            >
+                <s-radio value="character">character</s-radio>
+                <s-radio value="word">word</s-radio>
+                <s-radio value="line">line</s-radio>
+            </s-group>
+            <s-button type="primary" on-click="diff">开始diff</s-button>
+        </div>
+        <div class="input">
+            <s-textarea
+                value="{=diffData.oldData=}"
+                placeholder="please input old code"
+            />
+            <s-textarea
+                value="{=diffData.newData=}"
+                placeholder="please input new code"
+            />
+        </div>
+
+        <s-modal
+            title="Diff 结果"
+            width="1200"
+            modalStyle="top: 200px;"
+            visible="{=diffVisable=}"
+            hasFooter="{{false}}"
+        >
+            <div
+                s-is="modal"
+                diffType="{{diffType}}"
+                oldData="{{diffData.oldData}}"
+                newData="{{diffData.newData}}"
+            />
+        </s-modal>
+    </div>
+</template>
+
+<script>
+import CharacterWord from './character-word';
+import LineModal from './line';
+import {Radio, Input, Button, Modal} from 'santd';
+import '../styles/index.less';
+import {diffExample} from './const.js';
+
+export default {
+    components: {
+        's-radio': Radio,
+        's-group': Radio.Group,
+        's-textarea': Input.TextArea,
+        's-button': Button,
+        's-modal': Modal,
+        'character-word': CharacterWord,
+        'line-modal': LineModal,
+    },
+    initData() {
+        return {
+            diffData: {
+                oldData: 'booopsssssa',
+                newData: 'oopsssssabb',
+            },
+            diffType: 'character',
+            diffVisable: false,
+            modal: 'character-word',
+        };
+    },
+    handleChange(e) {
+        const diffType = e.target.value;
+        this.data.set('diffType', diffType);
+        // component
+        if (diffType === 'line') {
+            this.data.set('modal', 'line-modal');
+        }
+        else {
+            this.data.set('modal', 'character-word');
+        }
+        // data
+        this.data.set('diffData', diffExample[diffType]);
+        console.log(diffExample[diffType])
+    },
+    diff() {
+        this.data.set('diffVisable', true);
+    },
+};
+</script>
+
+<style lang="less">
+.app-wrap {
+    padding: 30px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    .input {
+        display: flex;
+        flex: 1;
+        margin-top: 20px;
+        .santd-input {
+            height: 100%;
+        }
+    }
+}
+</style>

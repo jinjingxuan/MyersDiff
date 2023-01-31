@@ -1,0 +1,44 @@
+<template>
+    <div class="character-word">
+        <span
+            s-for="item in diffArr"
+            class="{{item.option}}"
+        >{{item.value}}</span>
+    </div>
+</template>
+
+<script>
+import {characterDiff, wordDiff} from 'diff';
+
+export default {
+    computed: {
+        diffArr() {
+            const oldData = this.data.get('oldData');
+            const newData = this.data.get('newData');
+            const diffType = this.data.get('diffType');
+            if (diffType === 'character') {
+                return characterDiff.diff(oldData, newData);
+            }
+            else if (diffType === 'word') {
+                return wordDiff.diff(oldData, newData);
+            }
+        },
+    },
+}
+</script>
+
+<style lang="less">
+.character-word {
+    span {
+        white-space: pre-line;
+    }
+    .add {
+        background: #eaf2c2;
+        color: #406619;
+    }
+    .remove {
+        color: #b30000;
+        background: #fadad7;
+    }
+}
+</style>
