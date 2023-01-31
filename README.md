@@ -17,8 +17,6 @@ https://jinjingxuan.github.io/MyersDiff/
 │   └── imgs
 ├── commitlint.config.cjs  # commitlint 配置
 ├── example                # 样例
-├── dist                   # 打包后目录
-│   └── index.js
 ├── install-husky.sh       # 初始化 husky 配置
 ├── package.json           # package.json
 ├── .eslintrc.cjs          # eslint 配置
